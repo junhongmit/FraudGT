@@ -97,7 +97,7 @@ def run():
                      f"split_index={cfg.dataset.split_index}")
         logging.info(f"    Starting now: {datetime.datetime.now()}")
         # Set machine learning pipeline
-        loaders, dataset = create_loader(returnDataset=True)
+        loaders, dataset = create_loader(train_shuffle=cfg.train.shuffle, val_shuffle=cfg.val.shuffle, returnDataset=True)
         loggers = create_logger()
         model = create_model(dataset=dataset)
         if cfg.pretrained.dir:

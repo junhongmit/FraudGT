@@ -50,6 +50,9 @@ def extended_cfg(cfg):
     # would be evaluated under the same set of data.
     cfg.val.iter_per_epoch = 0
 
+    cfg.train.shuffle = True
+    cfg.val.shuffle= True
+
     # Sampling parameters
     cfg.train.persistent_workers = False
     cfg.train.pin_memory = False

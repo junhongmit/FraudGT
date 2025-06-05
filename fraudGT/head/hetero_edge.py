@@ -47,20 +47,24 @@ class HeteroGNNEdgeHead(nn.Module):
                batch[task].y[mask]
     
 
-    def forward(self, batch):
+    def forward(self, batch, return_embedding: bool = False):
         # TODO: add homogeneous graph support
         # batch.x_dict[cfg.dataset.task_entity] = self.layer_post_mp(batch.x_dict[cfg.dataset.task_entity])
         # pred, label = self._apply_index(batch)
     
         # if cfg.model.edge_decoding != 'concat':
         #     batch = self.layer_post_mp(batch)
-        pred, label = self._apply_index(batch)
+        x, label = self._apply_index(batch)
         # nodes_first = pred[0]
         # nodes_second = pred[1]
         # pred = self.decode_module(nodes_first, nodes_second)
-        pred = self.layer_post_mp(pred)
+        ori_x = x
+        pred = self.layer_post_mp(x)
 
-        return pred, label
+        if not return_embedding:
+            return pred, label
+        else:
+            return pred, label, ori_x
     
         # if not self.training:  # Compute extra stats when in evaluation mode.
         #     stats = self.compute_mrr(batch)

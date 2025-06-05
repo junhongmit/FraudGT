@@ -22,10 +22,7 @@ class HeteroGNNNodeHead(nn.Module):
                                  num_layers=max(cfg.gnn.layers_post_mp, cfg.gt.layers_post_gt),
                                  bias=True)
 
-    def _apply_index(self, batch):
-        # mask = '{}_mask'.format(batch.split)
-        # return batch.x_dict[cfg.dataset.task_entity][batch[cfg.dataset.task_entity][mask]], \
-        #        batch.y_dict[cfg.dataset.task_entity][batch[cfg.dataset.task_entity][mask]]
+    def _apply_index(self, batch, return_embedding: bool = False):
         task = cfg.dataset.task_entity
         # The front [:batch_size] nodes are the original input nodes in HGTLoader
         if isinstance(batch, HeteroData):
@@ -40,14 +37,37 @@ class HeteroGNNNodeHead(nn.Module):
         else:
             mask = f'{batch.split}_mask'
             return batch.x[batch[mask]], batch.y[batch[mask]]
-
-    def forward(self, batch):
+        
+    def _apply_index_with_embedding(self, batch, ori_x):
+        task = cfg.dataset.task_entity
+        # The front [:batch_size] nodes are the original input nodes in HGTLoader
         if isinstance(batch, HeteroData):
-            x = batch[cfg.dataset.task_entity].x
+            if hasattr(batch[task], 'batch_size'):
+                batch_size = batch[task].batch_size
+                return batch[task].x[:batch_size], \
+                    batch[task].y[:batch_size], \
+                    ori_x[:batch_size]
+            else:
+                mask = f'{batch.split}_mask'
+                return batch[task].x[batch[task][mask]], \
+                    batch[task].y[batch[task][mask]], \
+                    ori_x[batch[task][mask]]
+        else:
+            mask = f'{batch.split}_mask'
+            return batch.x[batch[mask]], batch.y[batch[mask]], ori_x[batch[mask]]
+
+    def forward(self, batch, return_embedding: bool = False):
+        if isinstance(batch, HeteroData):
+            ori_x = x = batch[cfg.dataset.task_entity].x
             x = self.layer_post_mp(x)
             batch[cfg.dataset.task_entity].x = x
         else:
+            ori_x = batch.x
             batch.x = self.layer_post_mp(batch.x)
 
-        pred, label = self._apply_index(batch)
-        return pred, label
+        if not return_embedding:
+            pred, label = self._apply_index(batch)
+            return pred, label
+        else:
+            pred, label, ori_x = self._apply_index_with_embedding(batch, ori_x)
+            return pred, label, ori_x

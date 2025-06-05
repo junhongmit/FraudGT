@@ -18,3 +18,5 @@ def set_cfg_pretrained(cfg):
 
     # Freeze the main pretrained 'body' of the model, learning only the new head
     cfg.pretrained.freeze_main = False
+
+    cfg.pretrained.prediction_log = ""

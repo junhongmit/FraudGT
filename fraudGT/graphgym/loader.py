@@ -350,7 +350,7 @@ def get_loader(dataset, sampler, batch_size, shuffle=True, split='train'):
     return loader_train
 
 
-def create_loader(dataset = None, shuffle = True, returnDataset = False):
+def create_loader(dataset = None, train_shuffle = True, val_shuffle = True, returnDataset = False):
     """
     Create data loader object
 
@@ -366,7 +366,7 @@ def create_loader(dataset = None, shuffle = True, returnDataset = False):
         id = dataset.data['train_graph_index']
         loaders = [
             get_loader(dataset[id], cfg.train.sampler, cfg.train.batch_size,
-                        shuffle=True)
+                        shuffle=train_shuffle)
         ]
         delattr(dataset.data, 'train_graph_index')
     else:
@@ -374,7 +374,7 @@ def create_loader(dataset = None, shuffle = True, returnDataset = False):
             get_loader(dataset,
                         cfg.train.sampler,
                         cfg.train.batch_size,
-                        shuffle=True,
+                        shuffle=train_shuffle,
                         split='train')
         ]
     print('Create train loader')
@@ -387,14 +387,14 @@ def create_loader(dataset = None, shuffle = True, returnDataset = False):
             id = dataset.data[split_names[i]]
             loaders.append(
                 get_loader(dataset[id], cfg.val.sampler, cfg.train.batch_size,
-                           shuffle=shuffle))
+                           shuffle=val_shuffle))
             delattr(dataset.data, split_names[i])
         else:
             loaders.append(
                 get_loader(dataset,
                             cfg.val.sampler,
                             cfg.train.batch_size,
-                            shuffle=shuffle,
+                            shuffle=val_shuffle,
                             split=split_names[i]))
             
     print('Create val/test loader')

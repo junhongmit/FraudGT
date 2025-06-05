@@ -112,6 +112,9 @@ class CustomLogger(Logger):
         # Whether to run comparison tests of alternative score implementations.
         self.test_scores = False
 
+        self._id = []
+        self._embs = []
+
     # basic properties
     def basic(self):
         stats = {
@@ -276,7 +279,7 @@ class CustomLogger(Logger):
             'rmse': reformat(mean_squared_error(true, pred, squared=False)),
         }
 
-    def update_stats(self, true, pred, loss, lr, time_used, params,
+    def update_stats(self, ids, true, pred, loss, lr, time_used, params, embs=None,
                      dataset_name=None, **kwargs):
         if dataset_name == 'ogbg-code2':
             assert true['y_arr'].shape[1] == len(pred)  # max_seq_len (5)
@@ -300,8 +303,10 @@ class CustomLogger(Logger):
             assert true.shape[0] == pred.shape[0]
             batch_size = true.shape[0]
         self._iter += 1
+        self._id.append(ids)
         self._true.append(true)
         self._pred.append(pred)
+        self._embs.append(embs)
         self._size_current += batch_size
         self._loss += loss * batch_size
         self._lr = lr
@@ -365,6 +370,16 @@ class CustomLogger(Logger):
             logging.info(f"...computing epoch stats took: "
                          f"{time.perf_counter() - start_time:.2f}s")
         return stats
+    
+    def export_prediction(self, file: str):
+        result = {
+            "ids": torch.cat(self._id),
+            "embeddings": torch.cat(self._embs),
+            "pred": torch.cat(self._pred),
+            "label": torch.cat(self._true),
+        }
+        torch.save(result, file)
+        logging.info(f"Detailed Prediction exported to path {{{file}}}.")
 
 
 def create_logger():
