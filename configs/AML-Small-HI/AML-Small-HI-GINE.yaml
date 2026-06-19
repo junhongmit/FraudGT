@@ -1,11 +1,11 @@
-out_dir: /nobackup/users/junhong/Logs/results
+out_dir: ./results
 metric_best: f1
 seed: 42
 wandb:
-  use: True
+  use: False
   project: unifiedGT
 dataset:
-  dir: /nobackup/users/junhong/Data
+  dir: ./data
   format: AML
   name: Small-HI
   task: hetero_edge

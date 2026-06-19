@@ -17,7 +17,7 @@ function run_repeats {
     fi
 
     main="python -m fraudGT.main --cfg ${cfg_file}"
-    out_dir="/nobackup/users/junhong/Logs/results/${dataset}"  # <-- Set the output dir.
+    out_dir="./results/${dataset}"
     common_params="out_dir ${out_dir} ${cfg_overrides}"
 
     echo "Run program: ${main}"
@@ -48,7 +48,7 @@ DATASET="AML-Small-HI"
 # Proposed GT
 # run_repeats ${DATASET} SparseEdgeGT               "name_tag SparseEdgeGT" #+EgoID"
 # run_repeats ${DATASET} SparseNodeGT               "name_tag SparseNodeGT" #+EgoID"
-# run_repeats ${DATASET} SparseNodeGT+ports         "name_tag SparseNodeGT+ports"
+run_repeats ${DATASET} SparseNodeGT+ports         "name_tag SparseNodeGT+ports"
 # run_repeats ${DATASET} SparseNodeGT2+RMP          "name_tag SparseNodeGT2+RMP wandb.use False"
 # run_repeats ${DATASET} SparseNodeGT+LP              "name_tag SparseNodeGT+LP"
 # run_repeats ${DATASET} SparseNodeGT+Dropout    "name_tag SparseNodeGT+Dropout"
@@ -106,7 +106,7 @@ DATASET="AML-Large-HI"
 # run_repeats ${DATASET} GINE+SparseEdgeGT          "name_tag GINE+SparseEdgeGT"
 
 DATASET="AML-Large-LI"
-run_repeats ${DATASET} MLP                "name_tag MLP"
+# run_repeats ${DATASET} MLP                "name_tag MLP"
 # run_repeats ${DATASET} MLP+Metapath                "name_tag MLP+Metapath"
 
 # Homogeneous GNN Baselines

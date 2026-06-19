@@ -1,11 +1,11 @@
-out_dir: /nobackup/users/junhong/Logs/results
+out_dir: ./results
 metric_best: f1
 seed: 42
 wandb:
-  use: True
+  use: False
   project: unifiedGT
 dataset:
-  dir: /nobackup/users/junhong/Data
+  dir: ./data
   format: AML
   name: Large-LI
   reverse_mp: True
@@ -39,7 +39,7 @@ val:
   iter_per_epoch: 256
   tqdm: True
 pretrained:
-  dir: /nobackup/users/junhong/Logs/results/AML-Large-HI/AML-Large-HI-Multi-SparseNodeGT-Multi-SparseNodeGT-gpu0
+  dir: ./results/AML-Large-HI/AML-Large-HI-Multi-SparseNodeGT-Multi-SparseNodeGT-gpu0
   reset_prediction_head: False
 model:
   type: GTModel
