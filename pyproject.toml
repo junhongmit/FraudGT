@@ -13,6 +13,11 @@ dependencies = [
     "yacs",
     "datatable",
     "pandas",
+    "dgl",
+    "networkx",
+    "matplotlib",
+    "scikit-learn",
+    "scipy",
 ]
 
 [tool.uv.sources]

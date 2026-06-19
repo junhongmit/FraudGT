@@ -1,3 +1,4 @@
 .ipynb_checkpoints/
-analysis.ipynb
-figure.png
+
+data-analysis/figures/
+data-analysis/raw/

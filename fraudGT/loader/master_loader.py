@@ -20,6 +20,7 @@ from ogb.nodeproppred import PygNodePropPredDataset
 from torch_geometric.datasets import (DBLP, IMDB, OGB_MAG, Planetoid, MovieLens)
 from fraudGT.datasets.aml_dataset import AMLDataset
 from fraudGT.datasets.eth_dataset import ETHDataset
+from fraudGT.datasets.fraud_review_dataset import FraudReviewDataset
 from fraudGT.datasets.temporal_dataset import TemporalDataset
 from fraudGT.graphgym.config import cfg
 from fraudGT.graphgym.loader import load_pyg, load_ogb, set_dataset_attr
@@ -223,6 +224,10 @@ def load_dataset_master(format, name, dataset_dir):
     elif format == 'ETH':
         dataset_dir = osp.join(dataset_dir, format)
         dataset = preformat_ETH(dataset_dir)
+
+    elif format == 'FraudReview':
+        dataset_dir = osp.join(dataset_dir, format)
+        dataset = FraudReviewDataset(root=dataset_dir, name=name)
 
     else:
         raise ValueError(f"Unknown data format: {format}")

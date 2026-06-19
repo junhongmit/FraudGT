@@ -1,0 +1,70 @@
+out_dir: ./results
+metric_best: f1
+seed: 42
+wandb:
+  use: False
+  project: unifiedGT
+dataset:
+  dir: ./data
+  format: FraudReview
+  name: Amazon
+  task: hetero_node
+  task_type: classification
+  task_entity: user
+  transductive: True
+  node_encoder: True
+  node_encoder_name: Hetero_Raw
+  node_encoder_bn: False
+  edge_encoder: False
+num_threads: 8
+num_workers: 4
+train:
+  mode: custom
+  sampler: hetero_neighbor
+  neighbor_sizes: [50, 50]
+  iter_per_epoch: 256
+  batch_size: 512
+  eval_period: 4
+  ckpt_period: 100
+  tqdm: True
+  persistent_workers: True
+  pin_memory: True
+val:
+  sampler: hetero_neighbor
+  iter_per_epoch: 256
+  tqdm: True
+model:
+  type: GTModel
+  loss_fun: weighted_cross_entropy
+  loss_fun_weight: [1, 10]
+  edge_decoding: dot
+  graph_pooling: mean
+gt:
+  layer_type: SparseNodeTransformer
+  layers_pre_gt: 1
+  layers: 2
+  layers_post_gt: 2
+  attn_heads: 4
+  dim_hidden: 64
+  input_dropout: 0.0
+  dropout: 0.1
+  attn_dropout: 0.2
+  batch_norm: False
+  layer_norm: True
+  l2_norm: False
+  act: gelu
+  attn_mask: Edge
+  residual: Fixed
+  ffn: Type
+  jumping_knowledge: False
+gnn:
+  dropout: 0.1
+optim:
+  batch_accumulation: 4
+  clip_grad_norm: True
+  optimizer: adamW
+  weight_decay: 1e-5
+  base_lr: 0.001
+  max_epoch: 200
+  scheduler: cosine_with_warmup
+  num_warmup_epochs: 5
